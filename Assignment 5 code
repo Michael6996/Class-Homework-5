@@ -1,1 +1,138 @@
+import java.io.*;
+import java.util.*;
+
+public class App {
+    public static void main(String[] args) throws IOException {
+        Scanner sc = new Scanner(System.in);
+        int[][] matrix1, matrix2, result;
+        int rows1, cols1, rows2, cols2;
+        
+        
+
+        if (args.length == 2) {
+            // Read the matrices from files
+            matrix1 = readMatrix(args[0]);
+            matrix2 = readMatrix(args[1]);
+            rows1 = matrix1.length;
+            cols1 = matrix1[0].length;
+            rows2 = matrix2.length;
+            cols2 = matrix2[0].length;
+         }else if (args.length == 1) {
+            // Generates random matrices
+            int size = Integer.parseInt(args[0]);
+            matrix1 = generateMatrix(size);
+            writeMatrix(matrix1, "matrixA.txt");
+            matrix2 = generateMatrix(size);
+            writeMatrix(matrix2, "matrixB.txt");
+            rows1 = rows2 = cols1 = cols2 = size;
+            
+        }else{
+            // Prompts user for inputs
+            System.out.print("Enter the number of rows in matrix 1: ");
+            rows1 = sc.nextInt();
+            System.out.print("Enter the number of columns in matrix 1: ");
+            cols1 = sc.nextInt();
+            matrix1 = new int[rows1][cols1];
+            System.out.println("Enter the elements of matrix 1:");
+            readMatrix(sc, matrix1);
+
+            System.out.print("Enter the number of rows in matrix 2: ");
+            rows2 = sc.nextInt();
+            System.out.print("Enter the number of columns in matrix 2: ");
+            cols2 = sc.nextInt();
+            matrix2 = new int[rows2][cols2];
+            System.out.println("Enter the elements of matrix 2:");
+            readMatrix(sc, matrix2);
+        }
+
+        // Check if the matrices can be multiplied
+        if (cols1 != rows2) {
+            System.out.println("Error: The number of columns in matrix 1 must be equal to the number of rows in matrix 2.");
+            return;
+        }
+
+        // Multiply the matrices
+        result = new int[rows1][cols2];
+        for (int a = 0; a < rows1; a++) {
+            for (int b = 0; b < cols2; b++) {
+                for (int c = 0; c < cols1; c++) {
+                    result[a][b] += matrix1[a][c] * matrix2[c][b];
+                    //System.out.println(result[a][b] += matrix1[a][c] * matrix2[c][b]);
+                
+                }
+            }
+        }
+
+        // Will write the result to file
+        writeMatrix(result, "matrix3.txt");
+        System.out.println("filename:matrix3.txt");
+    }
+
+    public static int[][] readMatrix(String filename) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            List<int[]> rows = new ArrayList<>();
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] tokens = line.split("\\s+");
+                int[] row = new int[tokens.length];
+                for (int a = 0; a < tokens.length; a++) {
+                    row[a] = Integer.parseInt(tokens[a]);
+                }
+                rows.add(row);
+            }
+            int[][] matrix = new int[rows.size()][];
+            for (int a = 0; a < rows.size(); a++) {
+                matrix[a] = rows.get(a);
+            }
+            return matrix;
+        }
+    }
+
+    public static int[][] generateMatrix(int size) {
+        int[][] matrix = new int[size][size];
+        Random rand = new Random();
+        for (int a = 0; a < size; a++) {
+            for (int b = 0; b < size; b++) {
+                matrix[a][b] = rand.nextInt(10);
+            }
+        }
+        return matrix;
+    }
+
+    public static void readMatrix(Scanner sc, int[][] matrix) {
+        for (int a = 0; a < matrix.length; a++) {
+            for (int b = 0; b < matrix[0].length; b++) {
+                matrix[a][b] = sc.nextInt();
+            }
+        }
+    }
+
+    public static void writeMatrix(int[][] matrix, String filename) throws IOException {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(filename))) {
+            for (int a = 0; a < matrix.length; a++) {
+                for (int b = 0; b < matrix[0].length; b++) {
+                    pw.print(matrix[a][b] + " ");
+                }
+                pw.println();
+            }
+        }
+    }
+    public class WritingMatrixToFile {
+        public static void main(String args[]) throws Exception {
+            int matrix[][] = {};
+            BufferedWriter writer = new BufferedWriter(new FileWriter("matrix.txt", false));
+            for (int a = 0; a < matrix.length; a++) {
+                for (int b = 0; b < matrix[a].length; b++) {
+                    writer.write(matrix[a][b] + " ");
+                }
+                writer.newLine();
+            }
+    
+            writer.flush();
+            writer.close();
+        }
+    }
+
+        }
+
 
